@@ -60,15 +60,16 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
             payload = {
                 "model": "openai/gpt-oss-20b",
                 "messages": [
-                    {
-                        "role": "system",
-                        "content": "أنت COSBATCHI AI، مساعد ذكي. أجب باللغة العربية بوضوح واحترافية، وساعد المستخدم."
-                    },
-                    {
-                        "role": "user",
-                        "content": question
-                    }
-                ],
+    {
+        "role": "system",
+        "content": "أنت COSBATCHI AI، مساعد ذكي. أجب باللغة العربية بوضوح واحترافية، وتذكر سياق المحادثة السابقة لفهم الأسئلة المرتبطة بها."
+    }
+] + conversation_history + [
+    {
+        "role": "user",
+        "content": question
+    }
+],
                 "temperature": 0.7,
                 "max_completion_tokens": 800
             }
