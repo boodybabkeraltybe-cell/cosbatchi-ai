@@ -64,7 +64,7 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
         "role": "system",
         "content": "أنت COSBATCHI AI، مساعد ذكي. أجب باللغة العربية بوضوح واحترافية، وتذكر سياق المحادثة السابقة لفهم الأسئلة المرتبطة بها."
     }
-] ] + data.get("history", []) + [
+ ] + data.get("history", []) + [
     {
         "role": "user",
         "content": question
