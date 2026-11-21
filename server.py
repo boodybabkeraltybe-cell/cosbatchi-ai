@@ -62,8 +62,7 @@ class COSBATCHI(BaseHTTPRequestHandler):
         print("COSBATCHI:", args[0])
 
 port = int(os.environ.get("PORT", 10000))
-
- server = HTTPServer(("0.0.0.0", port), COSBATCHIServer)
+server = HTTPServer(("0.0.0.0", port), COSBATCHIServer)
 
 print("COSBATCHI CORE 1.0 ONLINE")
 print("Server is running on port", port)
