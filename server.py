@@ -1,7 +1,7 @@
 import json
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
+from core import COSBATCHI_CORE
 class COSBATCHI(BaseHTTPRequestHandler):
 
     def send_json(self, data, status=200):
