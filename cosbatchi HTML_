@@ -118,12 +118,13 @@ button {
     <button onclick="sendMessage()">إرسال</button>
 </footer>
 
+
 <script>
-const input = document.getElementById("message");
+async function sendMessage() {
+    const input = document.getElementById("message");
     const chat = document.getElementById("chat");
 
     const text = input.value.trim();
-
     if (!text) return;
 
     const user = document.createElement("div");
@@ -131,16 +132,40 @@ const input = document.getElementById("message");
     user.textContent = text;
     chat.appendChild(user);
 
+    input.value = "";
+
     const bot = document.createElement("div");
     bot.className = "message bot";
-    bot.textContent = "تم استلام رسالتك. سيتم ربط محرك COSBATCHI بها في المرحلة القادمة.";
+    bot.textContent = "COSBATCHI يفكر...";
     chat.appendChild(bot);
 
-    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+
+    try {
+        const response = await fetch(
+            "https://cosbatchi-ai.onrender.com/ask",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: text
+                })
+            }
+        );
+
+        const data = await response.json();
+        bot.textContent = data.answer || "لم تصل إجابة.";
+
+    } catch (error) {
+        bot.textContent = "تعذر الاتصال بالخادم. حاول مرة أخرى.";
+    }
+
     chat.scrollTop = chat.scrollHeight;
 }
-    
 </script>
+
 
 </body>
 </html>
