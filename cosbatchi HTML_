@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSBATCHI AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #172033;
+}
+
+header {
+    padding: 20px;
+    border-bottom: 1px solid #e5eaf0;
+    text-align: center;
+}
+
+.logo {
+    color: #168bff;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px #80c5ff;
+}
+
+.subtitle {
+    color: #7b8794;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+#chat {
+    height: calc(100vh - 170px);
+    overflow-y: auto;
+    padding: 18px;
+}
+
+.message {
+    padding: 13px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    max-width: 88%;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.bot {
+    background: #f0f4f8;
+    margin-left: auto;
+}
+
+.user {
+    background: #1677e8;
+    color: white;
+    margin-right: auto;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+    background: white;
+    border-top: 1px solid #e5eaf0;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid #dce3eb;
+    border-radius: 12px;
+    font-size: 15px;
+}
+
+button {
+    background: #1677e8;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 20px;
+    font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">COSBATCHI</div>
+    <div class="subtitle">ARTIFICIAL INTELLIGENCE</div>
+</header>
+
+<div id="chat">
+    <div class="message bot">
+        مرحباً بك في COSBATCHI AI.
+        كيف يمكنني مساعدتك اليوم؟
+    </div>
+</div>
+
+<footer>
+    <input id="message"
+           type="text"
+           placeholder="اكتب رسالتك هنا..."
+           onkeydown="if(event.key==='Enter') sendMessage()">
+
+    <button onclick="sendMessage()">إرسال</button>
+</footer>
+
+<script>
+function sendMessage() {
+    const input = document.getElementById("message");
+    const chat = document.getElementById("chat");
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    const user = document.createElement("div");
+    user.className = "message user";
+    user.textContent = text;
+    chat.appendChild(user);
+
+    const bot = document.createElement("div");
+    bot.className = "message bot";
+    bot.textContent = "تم استلام رسالتك. سيتم ربط محرك COSBATCHI بها في المرحلة القادمة.";
+    chat.appendChild(bot);
+
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
