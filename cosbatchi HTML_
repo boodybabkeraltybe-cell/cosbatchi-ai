@@ -119,8 +119,7 @@ button {
 </footer>
 
 <script>
-function sendMessage() {
-    const input = document.getElementById("message");
+const input = document.getElementById("message");
     const chat = document.getElementById("chat");
 
     const text = input.value.trim();
@@ -140,6 +139,7 @@ function sendMessage() {
     input.value = "";
     chat.scrollTop = chat.scrollHeight;
 }
+    
 </script>
 
 </body>
