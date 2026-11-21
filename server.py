@@ -25,7 +25,7 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
         self.send_json({"status": "ok"})
 
     def do_GET(self):
-        if self.path in ["/", "/health"]:
+        if self.path.split("?")[0] in ["/", "/health"]:
             self.send_json({
                 "status": "COSBATCHI ONLINE",
                 "version": "2.0"
