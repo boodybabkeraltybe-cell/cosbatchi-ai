@@ -1,66 +1,90 @@
 import json
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from core import COSBATCHI_CORE
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FILE = os.path.join(BASE_DIR, "cosbatchi_knowledge.json")
+
+PORT = int(os.environ.get("PORT", 8765))
 
 
-class COSBATCHIServer(BaseHTTPRequestHandler):
+def load_knowledge():
+    try:
+        with open(FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print("Knowledge error:", e)
+        return {}
 
-    def send_json(self, data, status=200):
-        body = json.dumps(data, ensure_ascii=False).encode("utf-8")
-        self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
+
+class COSBATCHIHandler(BaseHTTPRequestHandler):
+
+    def send_cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def send_json(self, status, data):
+        response = json.dumps(
+            data, ensure_ascii=False
+        ).encode("utf-8")
+
+        self.send_response(status)
+        self.send_cors()
+        self.send_header(
+            "Content-Type", "application/json; charset=utf-8"
+        )
+        self.send_header("Content-Length", str(len(response)))
         self.end_headers()
-        self.wfile.write(body)
+        self.wfile.write(response)
 
     def do_OPTIONS(self):
         self.send_response(204)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_cors()
         self.end_headers()
 
     def do_GET(self):
-        if self.path == "/health":
-            self.send_json({
-                "name": "COSBATCHI AI",
-                "status": "online",
-                "version": "1.0",
-                "core": "COSBATCHI CORE 1.0"
+        if self.path in ("/", "/health"):
+            self.send_json(200, {
+                "status": "COSBATCHI ONLINE",
+                "version": "1.2"
             })
         else:
-            self.send_json({"error": "Not found"}, 404)
+            self.send_json(404, {"error": "Not Found"})
 
     def do_POST(self):
         if self.path != "/ask":
-            self.send_json({"error": "Not found"}, 404)
+            self.send_json(404, {"error": "Not Found"})
             return
 
         try:
             length = int(self.headers.get("Content-Length", 0))
-            data = json.loads(self.rfile.read(length))
-            question = data.get("question", "")
-            result = COSBATCHI_CORE.understand(question)
+            body = self.rfile.read(length)
 
-            self.send_json({
-                "answer": result["answer"],
-                "confidence": result["confidence"],
-                "engine": "COSBATCHI CORE 1.0"
-            })
+            request = json.loads(body.decode("utf-8"))
+            question = request.get("question", "").strip().lower()
+
+            knowledge = load_knowledge()
+
+            answer = knowledge.get(
+                question,
+                "لا أعرف هذه الإجابة بعد. علّمني إياها."
+            )
+
+            self.send_json(200, {"answer": answer})
 
         except Exception as error:
-            self.send_json({"error": str(error)}, 400)
+            print("ERROR:", error)
+            self.send_json(400, {"error": str(error)})
 
     def log_message(self, format, *args):
         print("COSBATCHI:", args[0])
 
 
-port = int(os.environ.get("PORT", 10000))
-server = HTTPServer(("0.0.0.0", port), COSBATCHIServer)
+server = HTTPServer(("0.0.0.0", PORT), COSBATCHIHandler)
 
-print("COSBATCHI CORE 1.0 ONLINE")
-print("Server is running on port", port)
+print("COSBATCHI SERVER 1.2")
+print("Server is running on port", PORT)
 
 server.serve_forever()
+        
