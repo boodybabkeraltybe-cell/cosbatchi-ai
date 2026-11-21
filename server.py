@@ -65,7 +65,7 @@ port = int(os.environ.get("PORT", 10000))
 
 server = HTTPServer(("0.0.0.0", port), COSBATCHI)
 
-print("COSBATCHI AI SERVER 1.0")
+print("COSBATCHI CORE 1.0 ONLINE")
 print("Server is running on port", port)
 
 server.serve_forever()
