@@ -1,4 +1,3 @@
-
 import json
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -70,6 +69,7 @@ print("COSBATCHI AI SERVER 1.0")
 print("Server is running on port", port)
 
 server.serve_forever()
+
 
 
         
