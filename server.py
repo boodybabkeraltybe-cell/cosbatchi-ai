@@ -98,20 +98,23 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
             answer = result["choices"][0]["message"]["content"]
             self.send_json({"answer": answer})
 
+        
         except urllib.error.HTTPError as error:
             details = error.read().decode("utf-8", errors="replace")
             print("Groq HTTP error:", error.code, details)
             self.send_json({
-    "answer": "خطأ Groq رقم " + str(error.code) + ": " + details
-}, 502)
+                "answer": "خطأ Groq رقم " + str(error.code) + ": " + details
+            }, 502)
 
         except Exception as error:
             print("Server error:", str(error))
             self.send_json({
-                "answer": "خطأ Groq رقم " + str(error.code) + ": " + details
+                "answer": "حدث خطأ في الخادم: " + str(error)
+            }, 500)
 
 
 print("COSBATCHI SERVER 2.0")
 print("Server is running on port", PORT)
 
 HTTPServer(("0.0.0.0", PORT), COSBATCHIHandler).serve_forever()
+    
