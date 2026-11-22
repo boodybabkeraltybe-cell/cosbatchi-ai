@@ -86,9 +86,10 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
                 GROQ_URL,
                 data=json.dumps(payload).encode("utf-8"),
                 headers={
-                    "Authorization": "Bearer " + GROQ_API_KEY,
-                    "Content-Type": "application/json"
-                },
+    "Authorization": "Bearer " + GROQ_API_KEY,
+    "Content-Type": "application/json",
+    "User-Agent": "COSBATCHI-AI/1.0"
+},
                 method="POST"
             )
 
