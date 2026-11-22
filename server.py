@@ -1,3 +1,4 @@
+
 import os
 import json
 import urllib.request
@@ -7,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 PORT = int(os.environ.get("PORT", 8765))
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+
 
 class COSBATCHIHandler(BaseHTTPRequestHandler):
 
@@ -57,19 +59,25 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
                 }, 500)
                 return
 
+            history = data.get("history", [])
+            if not isinstance(history, list):
+                history = []
+
+            messages = [
+                {
+                    "role": "system",
+                    "content": "أنت COSBATCHI AI، مساعد ذكي. أجب باللغة العربية بوضوح واحترافية، وتذكر سياق المحادثة السابقة لفهم الأسئلة المرتبطة بها."
+                }
+            ] + history[-20:] + [
+                {
+                    "role": "user",
+                    "content": question
+                }
+            ]
+
             payload = {
                 "model": "openai/gpt-oss-20b",
-                "messages": [
-    {
-        "role": "system",
-        "content": "أنت COSBATCHI AI، مساعد ذكي. أجب باللغة العربية بوضوح واحترافية، وتذكر سياق المحادثة السابقة لفهم الأسئلة المرتبطة بها."
-    }
- ] + data.get("history", []) + [
-    {
-        "role": "user",
-        "content": question
-    }
-],
+                "messages": messages,
                 "temperature": 0.7,
                 "max_completion_tokens": 800
             }
@@ -88,10 +96,8 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
                 result = json.loads(response.read().decode("utf-8"))
 
             answer = result["choices"][0]["message"]["content"]
-
             self.send_json({"answer": answer})
 
-        
         except urllib.error.HTTPError as error:
             details = error.read().decode("utf-8", errors="replace")
             print("Groq HTTP error:", error.code, details)
@@ -104,11 +110,9 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
             self.send_json({
                 "answer": "حدث خطأ في الخادم. حاول مرة أخرى."
             }, 500)
-            
 
 
 print("COSBATCHI SERVER 2.0")
 print("Server is running on port", PORT)
 
 HTTPServer(("0.0.0.0", PORT), COSBATCHIHandler).serve_forever()
-            
