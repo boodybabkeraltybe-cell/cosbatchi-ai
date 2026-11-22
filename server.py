@@ -108,8 +108,7 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
         except Exception as error:
             print("Server error:", str(error))
             self.send_json({
-                "answer": "حدث خطأ في الخادم. حاول مرة أخرى."
-            }, 500)
+                "answer": "خطأ Groq رقم " + str(error.code) + ": " + details
 
 
 print("COSBATCHI SERVER 2.0")
