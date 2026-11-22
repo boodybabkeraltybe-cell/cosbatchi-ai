@@ -91,18 +91,20 @@ class COSBATCHIHandler(BaseHTTPRequestHandler):
 
             self.send_json({"answer": answer})
 
+        
         except urllib.error.HTTPError as error:
-    details = error.read().decode("utf-8", errors="replace")
-    print("Groq HTTP error:", error.code, details)
-    self.send_json({
-        "answer": "حدث خطأ في خدمة الذكاء الاصطناعي. راجع سجلات الخادم."
-    }, 502)
+            details = error.read().decode("utf-8", errors="replace")
+            print("Groq HTTP error:", error.code, details)
+            self.send_json({
+                "answer": "حدث خطأ في خدمة الذكاء الاصطناعي. راجع سجلات الخادم."
+            }, 502)
 
         except Exception as error:
             print("Server error:", str(error))
             self.send_json({
                 "answer": "حدث خطأ في الخادم. حاول مرة أخرى."
             }, 500)
+            
 
 
 print("COSBATCHI SERVER 2.0")
